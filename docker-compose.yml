@@ -1,20 +1,20 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: project_hexa_go_postgres
+    container_name: go-hexa_postgres
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - project_hexa_go:/var/lib/postgresql/data
+      - .data/postgresdb:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: project_hexa_go_pgadmin
+    container_name: go-hexa_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -23,6 +23,14 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
+  redis:
+    image: redis:7.2
+    container_name: go-hexa_redis-server
+    ports:
+      - 6379:6379
+    volumes:
+      - .data/redis:/data # map data redis server ไป save ที่ folder .data/redis 
+      - .configRedis/redis.conf:/redis.conf # ติดตั้ง Redis config
+    command: redis-server /redis.conf # เพื่อ run Redis config
 
-volumes:
-  project_hexa_go:
+

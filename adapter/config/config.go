@@ -8,9 +8,10 @@ import (
 
 type (
 	Container struct {
-		App  *App
-		DB   *DB
-		HTTP *HTTP
+		App   *App
+		DB    *DB
+		HTTP  *HTTP
+		Redis *Redis
 	}
 	App struct {
 		Name string
@@ -29,6 +30,10 @@ type (
 		Env  string
 		URL  string
 		Port string
+	}
+	Redis struct {
+		Addr     string
+		Password string
 	}
 )
 
@@ -58,10 +63,15 @@ func New() (*Container, error) {
 		URL:  os.Getenv("HTTP_URL"),
 		Port: os.Getenv("HTTP_PORT"),
 	}
+	redis := &Redis{
+		Addr:     os.Getenv("REDIS_ADDR"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+	}
 
 	return &Container{
 		app,
 		db,
 		http,
+		redis,
 	}, nil
 }
