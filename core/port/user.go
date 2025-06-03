@@ -13,6 +13,8 @@ type UserRepository interface {
 	FindUserByEmail(ctx context.Context, email string) (*domain.User, error)
 	GetUserByID(ctx context.Context, id uint64) (*domain.User, error)
 	UpdateUserByID(ctx context.Context, id uint64, updateData *domain.User) (*domain.User, error)
+
+	DeleteUserByID(ctx context.Context, id uint64) (bool, error)
 }
 
 type UserService interface {
@@ -20,4 +22,6 @@ type UserService interface {
 	GetUser(ctx context.Context, id uint64) (*dto.UserResponse, error)
 	Register(ctx context.Context, user *domain.User) (*dto.UserResponse, error)
 	UpdateUser(ctx context.Context, id uint64, updateData *domain.User) (*dto.UpdateUserResponse, error)
+
+	DeleteUser(ctx context.Context, id uint64) error
 }

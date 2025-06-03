@@ -76,3 +76,11 @@ func (r *userRepositoryDB) UpdateUserByID(ctx context.Context, id uint64, update
 
 	return &updatedUser, nil
 }
+
+func (r *userRepositoryDB) DeleteUserByID(ctx context.Context, id uint64) (bool, error) {
+	result := r.db.WithContext(ctx).Where("id = ?", uint(id)).Delete(&domain.User{})
+	if result.Error != nil {
+		return false, result.Error
+	}
+	return result.RowsAffected > 0, nil
+}

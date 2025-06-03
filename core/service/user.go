@@ -118,8 +118,8 @@ func (us *userService) Register(ctx context.Context, user *domain.User) (*dto.Us
 
 func (us *userService) UpdateUser(ctx context.Context, id uint64, updateData *domain.User) (*dto.UpdateUserResponse, error) {
 	// Repository
-	updateByIDCtx, cancelupdateByID := context.WithTimeout(ctx, 2*time.Second)
-	defer cancelupdateByID()
+	updateByIDCtx, cancelUpdateByID := context.WithTimeout(ctx, 2*time.Second)
+	defer cancelUpdateByID()
 
 	user, err := us.repo.UpdateUserByID(updateByIDCtx, id, updateData)
 	if err != nil {
@@ -136,4 +136,28 @@ func (us *userService) UpdateUser(ctx context.Context, id uint64, updateData *do
 	rspUser := dto.NewUpdateUserResponse(user)
 
 	return rspUser, nil
+}
+
+func (us *userService) DeleteUser(ctx context.Context, id uint64) error {
+
+	// Repository : Delete
+	deleteByIDCtx, cancelDeleteByID := context.WithTimeout(ctx, 1*time.Second)
+	defer cancelDeleteByID()
+
+	isDeleted, err := us.repo.DeleteUserByID(deleteByIDCtx, id)
+
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return domain.ErrDatabaseTimeOut
+		}
+
+		slog.Error("Error Deleting user", "error", err)
+		return domain.ErrInternalServerError
+	}
+	if !isDeleted {
+		return domain.ErrNotFound
+	}
+
+	return nil
+
 }

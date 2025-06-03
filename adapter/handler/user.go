@@ -105,3 +105,18 @@ func (h *userHandlder) UpdateUser(c *fiber.Ctx) error {
 
 	return handleSuccess(c, "Update user success", user)
 }
+
+func (h *userHandlder) DeleteUser(c *fiber.Ctx) error {
+	idParam := c.Params("userId")
+	idUint64, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return parameterError(c)
+	}
+	ctx := c.UserContext()
+	err = h.userSrv.DeleteUser(ctx, idUint64)
+	if err != nil {
+		return handleError(c, err)
+	}
+
+	return handleSuccess(c, "", nil)
+}
