@@ -43,6 +43,7 @@ func main() {
 	app.Get("/users", userHandler.GetUsers)
 	app.Get("/users/:userId", userHandler.GetUser)
 	app.Post("/users", userHandler.Register)
+	app.Patch("/users/:userId", userHandler.UpdateUser)
 
 	// Start server
 	listenAddr := fmt.Sprintf(":%s", config.HTTP.Port)

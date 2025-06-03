@@ -55,3 +55,24 @@ func (r *userRepositoryDB) GetUserByID(ctx context.Context, id uint64) (*domain.
 	}
 	return &user, nil
 }
+
+func (r *userRepositoryDB) UpdateUserByID(ctx context.Context, id uint64, updateData *domain.User) (*domain.User, error) {
+
+	// 1. Update
+	result := r.db.WithContext(ctx).Model(&domain.User{}).Where("id = ?", uint(id)).Update("name", updateData.Name)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, nil
+	}
+	// 2. Fetch updated user
+	var updatedUser domain.User
+	if err := r.db.WithContext(ctx).First(&updatedUser, uint(id)).Error; err != nil {
+		return nil, err
+	}
+
+	return &updatedUser, nil
+}

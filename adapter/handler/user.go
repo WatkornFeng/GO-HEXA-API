@@ -24,8 +24,6 @@ func (h *userHandlder) GetUsers(c *fiber.Ctx) error {
 		return handleError(c, err)
 	}
 
-	// rsp := dto.NewListUsersResponse(users)
-
 	return handleSuccess(c, "Get list of users success", users)
 }
 
@@ -74,8 +72,36 @@ func (h *userHandlder) Register(c *fiber.Ctx) error {
 		return handleError(c, err)
 	}
 
-	// rsp := dto.NewUserResponse(user)
-
 	return handleSuccess(c, "Create user success", user)
 
+}
+
+type updateRequest struct {
+	Name string `json:"name" validate:"required,max=15,alpha"`
+}
+
+func (h *userHandlder) UpdateUser(c *fiber.Ctx) error {
+	var req updateRequest
+	idParam := c.Params("userId")
+	idUint64, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return parameterError(c)
+	}
+	if err := c.BodyParser(&req); err != nil {
+		return bodyParseError(c)
+	}
+	if err := validate.Struct(req); err != nil {
+		return validationError(c, err)
+	}
+	ctx := c.UserContext()
+
+	userReq := domain.User{
+		Name: req.Name,
+	}
+	user, err := h.userSrv.UpdateUser(ctx, idUint64, &userReq)
+	if err != nil {
+		return handleError(c, err)
+	}
+
+	return handleSuccess(c, "Update user success", user)
 }

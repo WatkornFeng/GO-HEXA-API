@@ -1,6 +1,10 @@
 package dto
 
-import "github.com/WatkornFeng/go-hexa/core/domain"
+import (
+	"time"
+
+	"github.com/WatkornFeng/go-hexa/core/domain"
+)
 
 // dto => Data Transfer Object
 type UserResponse struct {
@@ -26,4 +30,20 @@ func NewListUsersResponse(users []domain.User) []UserResponse {
 		}
 	}
 	return listUsersResponse
+}
+
+type UpdateUserResponse struct {
+	UserID   uint      `json:"customer_id"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+	UpdateAt time.Time `json:"update_at"`
+}
+
+func NewUpdateUserResponse(user *domain.User) *UpdateUserResponse {
+	return &UpdateUserResponse{
+		UserID:   user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		UpdateAt: user.UpdatedAt,
+	}
 }

@@ -12,10 +12,12 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *domain.User) (*domain.User, error)
 	FindUserByEmail(ctx context.Context, email string) (*domain.User, error)
 	GetUserByID(ctx context.Context, id uint64) (*domain.User, error)
+	UpdateUserByID(ctx context.Context, id uint64, updateData *domain.User) (*domain.User, error)
 }
 
 type UserService interface {
 	GetUsers(ctx context.Context) ([]dto.UserResponse, error)
 	GetUser(ctx context.Context, id uint64) (*dto.UserResponse, error)
 	Register(ctx context.Context, user *domain.User) (*dto.UserResponse, error)
+	UpdateUser(ctx context.Context, id uint64, updateData *domain.User) (*dto.UpdateUserResponse, error)
 }
