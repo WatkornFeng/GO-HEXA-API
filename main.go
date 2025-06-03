@@ -41,6 +41,7 @@ func main() {
 	// Init Fiber
 	app := fiber.New()
 	app.Get("/users", userHandler.GetUsers)
+	app.Get("/users/:userId", userHandler.GetUser)
 	app.Post("/users", userHandler.Register)
 
 	// Start server

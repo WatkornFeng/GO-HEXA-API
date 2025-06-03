@@ -35,11 +35,11 @@ func (us *userService) GetUsers(ctx context.Context) ([]dto.UserResponse, error)
 	}
 
 	// Repository
-	dbCtx, cancelDB := context.WithTimeout(ctx, 1*time.Second)
-	defer cancelDB()
+	getAllCtx, cancelGetAll := context.WithTimeout(ctx, 1*time.Second)
+	defer cancelGetAll()
 
 	// time.Sleep(3 * time.Second)
-	users, err := us.repo.GetAll(dbCtx)
+	users, err := us.repo.GetAll(getAllCtx)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
 			return nil, domain.ErrDatabaseTimeOut
@@ -57,6 +57,27 @@ func (us *userService) GetUsers(ctx context.Context) ([]dto.UserResponse, error)
 
 	slog.Info("GET DAT FROM DB")
 	return rspListUsers, nil
+}
+
+func (us *userService) GetUser(ctx context.Context, id uint64) (*dto.UserResponse, error) {
+	// Repository
+	getByIDCtx, cancelGetAll := context.WithTimeout(ctx, 1*time.Second)
+	defer cancelGetAll()
+	user, err := us.repo.GetUserByID(getByIDCtx, id)
+	if err != nil {
+		if errors.Is(err, context.DeadlineExceeded) {
+			return nil, domain.ErrDatabaseTimeOut
+		}
+
+		slog.Error("Error retrieving user", "error", err)
+		return nil, domain.ErrInternalServerError
+	}
+
+	if user == nil {
+		return nil, domain.ErrNotFound
+	}
+	rspUser := dto.NewUserResponse(user)
+	return rspUser, nil
 }
 
 func (us *userService) Register(ctx context.Context, user *domain.User) (*dto.UserResponse, error) {

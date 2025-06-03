@@ -80,6 +80,9 @@ func validationError(c *fiber.Ctx, err error) error {
 func bodyParseError(c *fiber.Ctx) error {
 	return ErrorResponse(c, fiber.StatusBadRequest, "Invalid request body", nil)
 }
+func parameterError(c *fiber.Ctx) error {
+	return ErrorResponse(c, fiber.StatusBadRequest, "Invalid parameter", nil)
+}
 
 func handleError(c *fiber.Ctx, err error) error {
 	if appErr, ok := err.(*domain.AppError); ok {

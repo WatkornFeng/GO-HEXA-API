@@ -44,3 +44,14 @@ func (r *userRepositoryDB) FindUserByEmail(ctx context.Context, email string) (*
 	return &user, nil
 
 }
+
+func (r *userRepositoryDB) GetUserByID(ctx context.Context, id uint64) (*domain.User, error) {
+	var user domain.User
+	if err := r.db.WithContext(ctx).Where("id = ?", uint(id)).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil // Not found is not an error, let service decide
+		}
+		return nil, err
+	}
+	return &user, nil
+}

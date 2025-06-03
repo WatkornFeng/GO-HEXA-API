@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/WatkornFeng/go-hexa/core/domain"
 	"github.com/WatkornFeng/go-hexa/core/port"
 	"github.com/go-playground/validator/v10"
@@ -25,6 +27,22 @@ func (h *userHandlder) GetUsers(c *fiber.Ctx) error {
 	// rsp := dto.NewListUsersResponse(users)
 
 	return handleSuccess(c, "Get list of users success", users)
+}
+
+func (h *userHandlder) GetUser(c *fiber.Ctx) error {
+
+	idParam := c.Params("userId")
+	idUint64, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return parameterError(c)
+	}
+	ctx := c.UserContext()
+	user, err := h.userSrv.GetUser(ctx, idUint64)
+	if err != nil {
+		return handleError(c, err)
+	}
+
+	return handleSuccess(c, "Get user success", user)
 }
 
 type registerRequest struct {
