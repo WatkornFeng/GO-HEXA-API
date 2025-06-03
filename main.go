@@ -38,6 +38,10 @@ func main() {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo, cache)
 	userHandler := handler.NewUserHandler(userService)
+	// Product
+	productRepo := repository.NewProductRepository(db)
+	productService := service.NewProductService(productRepo, cache)
+	productHandler := handler.NewProductHandler(productService)
 
 	// Init Fiber
 	app := fiber.New()
@@ -46,6 +50,8 @@ func main() {
 	app.Post("/users", userHandler.Register)
 	app.Patch("/users/:userId", userHandler.UpdateUser)
 	app.Delete("/users/:userId", userHandler.DeleteUser)
+
+	app.Post("/users/:userId/products", productHandler.CreateProduct)
 
 	// Start server
 	listenAddr := fmt.Sprintf(":%s", config.HTTP.Port)

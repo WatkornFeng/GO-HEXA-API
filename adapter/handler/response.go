@@ -60,6 +60,10 @@ func FormatValidationError(err error) map[string]string {
 				errors[field] = fmt.Sprintf("must be at most %s characters", param)
 			case "alpha":
 				errors[field] = "must contain only letters"
+			case "gt":
+				errors[field] = fmt.Sprintf("value must more than %s", param)
+			case "lte":
+				errors[field] = fmt.Sprintf("value must lower than %s", param)
 			default:
 				errors[field] = fmt.Sprintf("is not valid (%s)", tag)
 			}

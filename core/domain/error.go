@@ -30,4 +30,8 @@ var (
 		Message: "User already exists",
 		Code:    http.StatusConflict,
 	}
+	ErrProductPriceNotCorrect = &AppError{
+		Message: "Price must have at most 2 decimal places",
+		Code:    http.StatusBadRequest,
+	}
 )

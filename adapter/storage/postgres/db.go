@@ -42,7 +42,7 @@ func New(cfg *config.DB) *postgresClient {
 	slog.Info("Successfully connected to the database")
 
 	// Auto migrate
-	if err := db.AutoMigrate(&domain.User{}); err != nil {
+	if err := db.AutoMigrate(&domain.User{}, &domain.Product{}); err != nil {
 		slog.Error("Error migrating database", "error", err)
 		os.Exit(1)
 	}

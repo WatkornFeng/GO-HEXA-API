@@ -8,7 +8,7 @@ import (
 
 // dto => Data Transfer Object
 type UserResponse struct {
-	UserID uint   `json:"customer_id"`
+	UserID uint   `json:"user_id"`
 	Name   string `json:"name"`
 	Email  string `json:"email"`
 }
@@ -33,7 +33,7 @@ func NewListUsersResponse(users []domain.User) []UserResponse {
 }
 
 type UpdateUserResponse struct {
-	UserID   uint      `json:"customer_id"`
+	UserID   uint      `json:"user_id"`
 	Name     string    `json:"name"`
 	Email    string    `json:"email"`
 	UpdateAt time.Time `json:"update_at"`

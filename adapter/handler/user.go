@@ -72,7 +72,7 @@ func (h *userHandlder) Register(c *fiber.Ctx) error {
 		return handleError(c, err)
 	}
 
-	return handleSuccess(c, "Create user success", user)
+	return handleSuccess(c, "Create new user success", user)
 
 }
 
